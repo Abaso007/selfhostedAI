@@ -190,7 +190,7 @@ async def completions(body: Body, request: Request):
     for message in body.messages:
         if message.role == 'user':
             user_question = message.content
-        elif message.role == 'system' or message.role == 'assistant':
+        elif message.role in ['system', 'assistant']:
             assistant_answer = message.content
             history.append((user_question, assistant_answer))
 
@@ -234,7 +234,7 @@ AI: 好的, 如果有什么需要, 随时告诉我"""
 
         model["model"].stdin.write((user_question.replace("\n", "\\\n") + "\r\n").encode())
         model["model"].stdin.flush()
-        print("> " + user_question)
+        print(f"> {user_question}")
 
         if body.stream:
             while not eval_data["conversation"].decode(errors='ignore').endswith("\n> "):
